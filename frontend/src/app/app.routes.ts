@@ -10,5 +10,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'posts/new',
+    loadComponent: () => import('./components/posts/create-post/create-post.component').then(m => m.CreatePostComponent),
+    canActivate: [authGuard]
+  },
   { path: '**', redirectTo: '' }
 ];
