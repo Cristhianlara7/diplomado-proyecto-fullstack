@@ -42,7 +42,10 @@ mongoose.connection.on('error', (err) => {
 
 // Rutas
 const authRoutes = require('./routes/auth.routes');
+const postRoutes = require('./routes/post.routes');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {

@@ -15,5 +15,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/posts/create-post/create-post.component').then(m => m.CreatePostComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'posts/:id',
+    loadComponent: () => import('./components/posts/post-detail/post-detail.component').then(m => m.PostDetailComponent),
+    canActivate: [authGuard]
+  },
   { path: '**', redirectTo: '' }
 ];
