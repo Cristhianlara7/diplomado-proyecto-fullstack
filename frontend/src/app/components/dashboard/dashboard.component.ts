@@ -26,8 +26,8 @@ import { Post } from '../../interfaces/post.interface';
               <h5 class="card-title">{{post.title}}</h5>
               <p class="card-text">{{post.content | slice:0:100}}...</p>
               <div class="d-flex justify-content-between">
-                <button class="btn btn-sm btn-primary" [routerLink]="['/posts', post.id]">Ver</button>
-                <button class="btn btn-sm btn-danger" (click)="deletePost(post.id)">Eliminar</button>
+                <button class="btn btn-sm btn-primary" [routerLink]="['/posts', post._id]">Ver</button>
+                <button class="btn btn-sm btn-danger" (click)="deletePost(post._id)">Eliminar</button>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
     if (confirm('¿Estás seguro de que deseas eliminar este post?')) {
       this.postService.deletePost(id).subscribe({
         next: () => {
-          this.posts = this.posts.filter(post => post.id !== id);
+          this.posts = this.posts.filter(post => post._id !== id);
         },
         error: (error) => {
           console.error('Error eliminando post:', error);

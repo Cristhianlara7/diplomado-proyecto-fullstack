@@ -76,16 +76,16 @@ export class PostDetailComponent implements OnInit {
   }
 
   editPost() {
-    if (this.post?.id) {
-      this.router.navigate(['/posts/edit', this.post.id]);
+    if (this.post?._id) {
+      this.router.navigate(['/posts/edit', this.post._id]);
     }
   }
 
   deletePost() {
-    if (!this.post?.id) return;
+    if (!this.post?._id) return;
 
     if (confirm('¿Estás seguro de que deseas eliminar este post?')) {
-      this.postService.deletePost(this.post.id).subscribe({
+      this.postService.deletePost(this.post._id).subscribe({
         next: () => {
           this.router.navigate(['/dashboard']);
         },

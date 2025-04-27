@@ -23,3 +23,37 @@ exports.getPosts = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener los posts', error: error.message });
   }
 };
+
+exports.getPost = async (req, res) => {
+  try {
+    const post = await Post.findOne({ 
+      _id: req.params.id,
+      author: req.user.id 
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post no encontrado' });
+    }
+
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el post', error: error.message });
+  }
+};
+
+exports.deletePost = async (req, res) => {
+  try {
+    const post = await Post.findOneAndDelete({ 
+      _id: req.params.id,
+      author: req.user.id 
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post no encontrado' });
+    }
+
+    res.json({ message: 'Post eliminado exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el post', error: error.message });
+  }
+};
