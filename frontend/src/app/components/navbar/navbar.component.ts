@@ -35,7 +35,14 @@ import { Router } from '@angular/router';
             </ng-container>
             <ng-template #loggedIn>
               <li class="nav-item">
-                <button class="btn btn-link nav-link" (click)="logout($event)">Cerrar Sesión</button>
+                <a class="nav-link" routerLink="/profile" routerLinkActive="active">
+                  <i class="bi bi-person-circle"></i> Mi Perfil
+                </a>
+              </li>
+              <li class="nav-item">
+                <button class="btn btn-link nav-link" (click)="logout($event)">
+                  <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </button>
               </li>
             </ng-template>
           </ul>

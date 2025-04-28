@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const generateToken = (userId) => {
@@ -79,9 +80,13 @@ exports.login = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el perfil', error: error.message });
+    console.error('Error al obtener perfil:', error);
+    res.status(500).json({ message: 'Error al obtener el perfil del usuario' });
   }
 };
 
@@ -90,25 +95,34 @@ exports.updateProfile = async (req, res) => {
     const { name, email, currentPassword, newPassword } = req.body;
     const user = await User.findById(req.user.id);
 
-    if (currentPassword) {
-      const isMatch = await bcrypt.compare(currentPassword, user.password);
-      if (!isMatch) {
-        return res.status(400).json({ message: 'La contraseña actual es incorrecta' });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Actualizar campos básicos
+    if (name) user.name = name;
+    if (email) user.email = email;
+
+    // Manejar actualización de contraseña si se proporciona
+    if (currentPassword && newPassword) {
+      try {
+        await user.updatePassword(currentPassword, newPassword);
+      } catch (error) {
+        return res.status(400).json({ message: error.message });
       }
     }
 
-    user.name = name;
-    user.email = email;
-
-    if (newPassword) {
-      user.password = await bcrypt.hash(newPassword, 10);
-    }
-
+    // Guardar cambios
     await user.save();
 
-    const userWithoutPassword = await User.findById(user._id).select('-password');
-    res.json(userWithoutPassword);
+    // Devolver usuario actualizado sin la contraseña
+    const updatedUser = await User.findById(user._id).select('-password');
+    res.json(updatedUser);
   } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar el perfil', error: error.message });
+    console.error('Error al actualizar perfil:', error);
+    res.status(500).json({ 
+      message: 'Error al actualizar el perfil del usuario',
+      error: error.message 
+    });
   }
 };
