@@ -9,17 +9,32 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/posts" routerLinkActive="active">Posts</a>
-        </li>
+        <!-- Enlaces para usuarios autenticados -->
+        <ng-container *ngIf="isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/posts" routerLinkActive="active">Posts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/profile" routerLinkActive="active">Mi Perfil</a>
+          </li>
+        </ng-container>
       </ul>
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/register" routerLinkActive="active">Registro</a>
-        </li>
+        <!-- Enlaces para usuarios NO autenticados -->
+        <ng-container *ngIf="!isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register" routerLinkActive="active">Registro</a>
+          </li>
+        </ng-container>
+        <!-- Botón de logout para usuarios autenticados -->
+        <ng-container *ngIf="isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="logout($event)">Cerrar Sesión</a>
+          </li>
+        </ng-container>
       </ul>
     </div>
   </div>

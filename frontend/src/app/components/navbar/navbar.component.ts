@@ -35,7 +35,7 @@ import { Router } from '@angular/router';
             </ng-container>
             <ng-template #loggedIn>
               <li class="nav-item">
-                <button class="btn btn-link nav-link" (click)="logout()">Cerrar Sesión</button>
+                <button class="btn btn-link nav-link" (click)="logout($event)">Cerrar Sesión</button>
               </li>
             </ng-template>
           </ul>
@@ -50,7 +50,14 @@ export class NavbarComponent {
     private router: Router
   ) {}
 
-  logout() {
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  logout(event: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
     this.authService.logout();
     this.router.navigate(['/login']);
   }

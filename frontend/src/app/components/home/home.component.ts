@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,12 @@ import { AuthService } from '../../services/auth.service';
     <div class="container mt-5">
       <div class="row justify-content-center text-center">
         <div class="col-md-8">
-          <h1 class="display-4 mb-4">Bienvenido a BlogApp</h1>
+          <ng-container *ngIf="isAuthenticated() && userData">
+            <h1 class="display-4 mb-4">¡Bienvenido {{userData.name}}!</h1>
+          </ng-container>
+          <ng-container *ngIf="!isAuthenticated()">
+            <h1 class="display-4 mb-4">Bienvenido a BlogApp</h1>
+          </ng-container>
           <p class="lead mb-4">
             Tu espacio personal para compartir ideas, historias y experiencias.
           </p>
@@ -76,8 +82,35 @@ import { AuthService } from '../../services/auth.service';
     </div>
   `
 })
-export class HomeComponent {
-  constructor(private authService: AuthService) {}
+export class HomeComponent implements OnInit {
+  userData: any = null;
+
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient
+  ) {}
+
+  ngOnInit() {
+    if (this.isAuthenticated()) {
+      this.loadUserData();
+    }
+  }
+
+  loadUserData() {
+    const token = this.authService.getToken();
+    this.http.get('http://localhost:3001/api/auth/profile', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).subscribe({
+      next: (data: any) => {
+        this.userData = data;
+      },
+      error: (error) => {
+        console.error('Error al cargar datos del usuario:', error);
+      }
+    });
+  }
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();

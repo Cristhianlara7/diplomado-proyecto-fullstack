@@ -12,27 +12,39 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+    return this.http.post(`${this.apiUrl}/register`, userData)
+      .pipe(
+        tap((response: any) => {
+          const token = response?.data?.token || response?.token;
+          if (token) {
+            localStorage.setItem('token', token);
+          }
+        })
+      );
   }
 
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+    return this.http.post(`${this.apiUrl}/login`, credentials)
+      .pipe(
+        tap((response: any) => {
+          // Asegurarse de que la respuesta tenga la estructura correcta
+          const token = response?.data?.token || response?.token;
+          if (token) {
+            localStorage.setItem('token', token);
+          }
+        })
+      );
   }
 
   logout(): void {
     localStorage.removeItem('token');
   }
 
-  saveToken(token: string): void {
-    localStorage.setItem('token', token);
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('token');
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
-  }
-
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    return !!token;
   }
 }

@@ -135,7 +135,6 @@ export class RegisterComponent {
 
       this.authService.register(userData).subscribe({
         next: (response) => {
-          this.authService.saveToken(response.token);
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

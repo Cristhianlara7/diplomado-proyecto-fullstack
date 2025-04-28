@@ -75,3 +75,40 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Error en el servidor', error: error.message });
   }
 };
+
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el perfil', error: error.message });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, email, currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.id);
+
+    if (currentPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'La contraseña actual es incorrecta' });
+      }
+    }
+
+    user.name = name;
+    user.email = email;
+
+    if (newPassword) {
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    await user.save();
+
+    const userWithoutPassword = await User.findById(user._id).select('-password');
+    res.json(userWithoutPassword);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el perfil', error: error.message });
+  }
+};
