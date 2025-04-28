@@ -57,3 +57,27 @@ exports.deletePost = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar el post', error: error.message });
   }
 };
+
+exports.updatePost = async (req, res) => {
+  try {
+    const post = await Post.findOneAndUpdate(
+      { 
+        _id: req.params.id,
+        author: req.user.id 
+      },
+      {
+        title: req.body.title,
+        content: req.body.content
+      },
+      { new: true }
+    );
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post no encontrado' });
+    }
+
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el post', error: error.message });
+  }
+};

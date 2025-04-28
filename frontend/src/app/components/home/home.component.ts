@@ -1,42 +1,74 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   template: `
-    <div class="container">
-      <div class="jumbotron text-center my-4">
-        <h1 class="display-4">Bienvenido a nuestro Blog</h1>
-        <p class="lead">Comparte tus ideas y conocimientos con la comunidad</p>
-        <hr class="my-4">
-        <p>Únete a nuestra comunidad y comienza a compartir tus historias</p>
-        <a class="btn btn-primary btn-lg" routerLink="/register" role="button">Registrarse</a>
+    <div class="container mt-5">
+      <div class="row justify-content-center text-center">
+        <div class="col-md-8">
+          <h1 class="display-4 mb-4">Bienvenido a BlogApp</h1>
+          <p class="lead mb-4">
+            Tu espacio personal para compartir ideas, historias y experiencias.
+          </p>
+          
+          <div class="mb-5">
+            <p class="mb-4">
+              Crea, gestiona y comparte tus publicaciones de manera sencilla y profesional.
+            </p>
+          </div>
+
+          <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <ng-container *ngIf="!isAuthenticated(); else authenticatedButtons">
+              <button class="btn btn-primary btn-lg px-4" routerLink="/register">
+                Registrarse
+              </button>
+              <button class="btn btn-outline-primary btn-lg px-4" routerLink="/login">
+                Iniciar Sesión
+              </button>
+            </ng-container>
+            
+            <ng-template #authenticatedButtons>
+              <button class="btn btn-primary btn-lg px-4" routerLink="/dashboard">
+                Ir al Dashboard
+              </button>
+            </ng-template>
+          </div>
+        </div>
       </div>
-      
-      <div class="row">
+
+      <div class="row mt-5">
         <div class="col-md-4">
-          <div class="card mb-4">
-            <div class="card-body">
-              <h5 class="card-title">Comparte tus Ideas</h5>
-              <p class="card-text">Crea y publica contenido interesante para la comunidad.</p>
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <h3 class="card-title">Crea</h3>
+              <p class="card-text">
+                Escribe y publica tus historias con un editor fácil de usar.
+              </p>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card mb-4">
-            <div class="card-body">
-              <h5 class="card-title">Conecta con Otros</h5>
-              <p class="card-text">Interactúa con otros miembros de la comunidad.</p>
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <h3 class="card-title">Gestiona</h3>
+              <p class="card-text">
+                Organiza y edita tus publicaciones desde un dashboard intuitivo.
+              </p>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card mb-4">
-            <div class="card-body">
-              <h5 class="card-title">Aprende y Crece</h5>
-              <p class="card-text">Descubre nuevo contenido y amplía tus conocimientos.</p>
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <h3 class="card-title">Comparte</h3>
+              <p class="card-text">
+                Comparte tus publicaciones y conecta con otros usuarios.
+              </p>
             </div>
           </div>
         </div>
@@ -44,4 +76,10 @@ import { CommonModule } from '@angular/common';
     </div>
   `
 })
-export class HomeComponent {}
+export class HomeComponent {
+  constructor(private authService: AuthService) {}
+
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+}
