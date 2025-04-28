@@ -16,6 +16,10 @@ import { Router } from '@angular/router';
             <div class="card-body">
               <h2 class="text-center mb-4">Mi Perfil</h2>
               
+              <div class="alert alert-success" *ngIf="successMessage">
+                {{ successMessage }}
+              </div>
+              
               <div *ngIf="!isEditing" class="profile-view">
                 <div class="text-center mb-4">
                   <div class="avatar-circle">
@@ -96,13 +100,9 @@ import { Router } from '@angular/router';
                   {{errorMessage}}
                 </div>
 
-                <div class="alert alert-success" *ngIf="successMessage">
-                {{ successMessage }}
-              </div>
-
-              <div class="alert alert-danger" *ngIf="errorMessage">
-                {{ errorMessage }}
-              </div>
+                <div class="alert alert-danger" *ngIf="errorMessage">
+                  {{ errorMessage }}
+                </div>
 
                 <div class="d-grid gap-2">
                   <button type="submit" class="btn btn-primary">Guardar Cambios</button>
