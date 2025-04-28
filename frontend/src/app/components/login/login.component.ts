@@ -55,7 +55,7 @@ import { HttpClientModule } from '@angular/common/http';
 
                 <div class="d-grid gap-2">
                   <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-                  <a routerLink="/register" class="btn btn-link">¿No tienes cuenta? Regístrate</a>
+                  
                 </div>
               </form>
             </div>
