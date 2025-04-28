@@ -16,6 +16,10 @@ import { PostService } from '../../../services/post.service';
             <div class="card-body">
               <h2 class="text-center mb-4">Crear Nuevo Post</h2>
               
+              <div class="alert alert-success" *ngIf="successMessage">
+                {{ successMessage }}
+              </div>
+
               <div class="alert alert-danger" *ngIf="errorMessage">
                 {{ errorMessage }}
               </div>
@@ -65,6 +69,7 @@ export class CreatePostComponent {
   postForm: FormGroup;
   submitted = false;
   errorMessage = '';
+  successMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -80,11 +85,15 @@ export class CreatePostComponent {
   onSubmit() {
     this.submitted = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
     if (this.postForm.valid) {
       this.postService.createPost(this.postForm.value).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard']);
+          this.successMessage = '¡Post creado exitosamente!';
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 2000);
         },
         error: (error) => {
           this.errorMessage = error.error.message || 'Error al crear el post. Por favor, intente nuevamente.';

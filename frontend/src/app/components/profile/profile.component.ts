@@ -96,6 +96,14 @@ import { Router } from '@angular/router';
                   {{errorMessage}}
                 </div>
 
+                <div class="alert alert-success" *ngIf="successMessage">
+                {{ successMessage }}
+              </div>
+
+              <div class="alert alert-danger" *ngIf="errorMessage">
+                {{ errorMessage }}
+              </div>
+
                 <div class="d-grid gap-2">
                   <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                   <button type="button" class="btn btn-secondary" (click)="toggleEdit()">Cancelar</button>
@@ -132,6 +140,7 @@ export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
   submitted = false;
   errorMessage = '';
+  successMessage = ''; 
   userData: any = null;
 
   constructor(
@@ -187,6 +196,7 @@ export class ProfileComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     this.errorMessage = '';
+    this.successMessage = '';  // Limpiar mensaje de éxito
 
     if (this.profileForm.valid) {
       this.authService.updateProfile(this.profileForm.value).subscribe({
@@ -194,6 +204,9 @@ export class ProfileComponent implements OnInit {
           this.userData = response;
           this.isEditing = false;
           this.submitted = false;
+          if (this.profileForm.get('newPassword')?.value) {
+            this.successMessage = 'Contraseña actualizada exitosamente';
+          }
         },
         error: (error) => {
           this.errorMessage = error.error.message || 'Error al actualizar el perfil';
